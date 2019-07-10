@@ -1,5 +1,6 @@
 package com.seckillmall.controller;
 
+import com.alibaba.druid.util.StringUtils;
 import com.seckillmall.controller.viewobject.UserVO;
 import com.seckillmall.error.BusinessException;
 import com.seckillmall.error.EmBusinessError;
@@ -8,14 +9,13 @@ import com.seckillmall.service.impl.UserServiceImpl;
 import com.seckillmall.service.model.UserModel;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 @Controller("user")
 @RequestMapping("/user")
@@ -23,6 +23,45 @@ public class UserController extends BaseController{
 
     @Autowired
     private UserServiceImpl userService;
+
+    @Autowired
+    private HttpServletRequest httpServletRequest;
+
+    @RequestMapping("/register")
+    public CommonReturnType register(@RequestParam(name="telphone")String telphone,
+                                     @RequestParam(name = "id")Integer id,
+                                     @RequestParam(name = "name")String name,
+                                     @RequestParam(name = "gender")Byte gender,
+                                     @RequestParam(name = "age")Integer age,
+                                     @RequestParam(name = "optcode")String optCode
+                                     ) throws BusinessException {
+        //首先校验optcode
+        String inSessionCode = (String)this.httpServletRequest.getSession().getAttribute("telphone");
+        if(!com.alibaba.druid.util.StringUtils.equals(inSessionCode, optCode)){
+            throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, "注册短信验证错误");
+        }
+
+        //然后操作service进行用户注册
+    }
+
+
+    @RequestMapping("/getotp")
+    @ResponseBody
+    public CommonReturnType getOtp(@RequestParam(name="telphone")String telphone){
+        //获取otp随机码
+        Random random = new Random();
+        int randomCode = random.nextInt(99999);
+        String optCode = String.valueOf(randomCode + 10000);
+
+        //与Httpsession进行绑定
+        httpServletRequest.getSession().setAttribute(telphone, optCode);
+
+        //将optcode返回给用户
+        System.out.println("telphone = "+ telphone + " & optdoe = "+ optCode);
+
+        return CommonReturnType.create(null);
+
+    }
 
     @RequestMapping("/get")
     @ResponseBody

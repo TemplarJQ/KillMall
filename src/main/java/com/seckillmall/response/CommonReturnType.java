@@ -14,7 +14,7 @@ public class CommonReturnType {
         return CommonReturnType.create(object, "success");
     }
 
-    public  static CommonReturnType create(Object object, String status){
+    public static CommonReturnType create(Object object, String status){
         CommonReturnType type = new CommonReturnType();
         type.setData(object);
         type.setStatus(status);

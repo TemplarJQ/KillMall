@@ -1,10 +1,13 @@
 package com.seckillmall.service.impl;
 
 
+import com.alibaba.druid.util.StringUtils;
 import com.seckillmall.dao.UserDOMapper;
 import com.seckillmall.dao.UserPasswordMapper;
 import com.seckillmall.dataobject.UserDO;
 import com.seckillmall.dataobject.UserPassword;
+import com.seckillmall.error.BusinessException;
+import com.seckillmall.error.EmBusinessError;
 import com.seckillmall.service.UserService;
 import com.seckillmall.service.model.UserModel;
 import org.springframework.beans.BeanUtils;
@@ -33,6 +36,47 @@ public class UserServiceImpl implements UserService {
         UserPassword userPassword = userPasswordMapper.selectByUserId(id);
 
         return convertFromDataObject(userDO, userPassword);
+    }
+
+    @Override
+    public void register(UserModel userModel) throws BusinessException {
+        if(userModel == null){
+            throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, "用户信息为空");
+        }
+
+        if(org.apache.commons.lang3.StringUtils.isEmpty(userModel.getName())
+            || userModel.getGender() == null
+            || userModel.getAge() == null
+            || org.apache.commons.lang3.StringUtils.isEmpty(userModel.getTelphone())){
+                throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR);
+        }
+
+        //实现model转化为dataobject
+        UserDO userDO = convertFromUserModel(userModel);
+        userDOMapper.insertSelective(userDO);
+
+        UserPassword userPassword = convertPasswordFromUserModel(userModel);
+        userPasswordMapper.insertSelective(userPassword);
+
+    }
+
+    private UserPassword convertPasswordFromUserModel(UserModel userModel){
+        if(userModel == null){
+            return null;
+        }
+        UserPassword userPassword = new UserPassword();
+        userPassword.setEncrptPassword(userModel.getEncrptPassword());
+        userPassword.setId(userModel.getId());
+        return userPassword;
+    }
+
+    private UserDO convertFromUserModel(UserModel userModel){
+        UserDO userDO = new UserDO();
+        if(userModel == null){
+            return null;
+        }
+        BeanUtils.copyProperties(userModel, userDO);
+        return userDO;
     }
 
     private UserModel convertFromDataObject(UserDO userDO, UserPassword userPassword){
