@@ -10,6 +10,17 @@ public class CommonReturnType {
     private String status;
     private Object data;
 
+    public static CommonReturnType create(Object object){
+        return CommonReturnType.create(object, "success");
+    }
+
+    public  static CommonReturnType create(Object object, String status){
+        CommonReturnType type = new CommonReturnType();
+        type.setData(object);
+        type.setStatus(status);
+        return type;
+    }
+
     public String getStatus() {
         return status;
     }
