@@ -7,6 +7,7 @@ import com.seckillmall.error.EmBusinessError;
 import com.seckillmall.response.CommonReturnType;
 import com.seckillmall.service.impl.UserServiceImpl;
 import com.seckillmall.service.model.UserModel;
+import org.apache.tomcat.util.security.MD5Encoder;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,8 +32,9 @@ public class UserController extends BaseController{
     public CommonReturnType register(@RequestParam(name="telphone")String telphone,
                                      @RequestParam(name = "id")Integer id,
                                      @RequestParam(name = "name")String name,
-                                     @RequestParam(name = "gender")Byte gender,
+                                     @RequestParam(name = "gender")Integer gender,
                                      @RequestParam(name = "age")Integer age,
+                                     @RequestParam(name = "password")String password ,
                                      @RequestParam(name = "optcode")String optCode
                                      ) throws BusinessException {
         //首先校验optcode
@@ -42,6 +44,17 @@ public class UserController extends BaseController{
         }
 
         //然后操作service进行用户注册
+        UserModel userModel = new UserModel();
+        userModel.setTelphone(telphone);
+        userModel.setAge(age);
+        userModel.setGender(gender);
+        userModel.setName(name);
+        userModel.setRegisterMode("byphone");
+        userModel.setEncrptPassword(MD5Encoder.encode(password.getBytes()));
+
+        userService.register(userModel);
+        return CommonReturnType.create(null);
+
     }
 
 
