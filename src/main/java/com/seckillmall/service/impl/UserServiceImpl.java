@@ -10,6 +10,8 @@ import com.seckillmall.error.BusinessException;
 import com.seckillmall.error.EmBusinessError;
 import com.seckillmall.service.UserService;
 import com.seckillmall.service.model.UserModel;
+import com.seckillmall.validator.ValidationResult;
+import com.seckillmall.validator.ValidatorImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -24,6 +26,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserPasswordMapper userPasswordMapper;
+
+    @Autowired
+    private ValidatorImpl validator;
 
     @Override
     public UserModel getUserById(Integer id) {
@@ -47,11 +52,15 @@ public class UserServiceImpl implements UserService {
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, "用户信息为空");
         }
 
-        if(org.apache.commons.lang3.StringUtils.isEmpty(userModel.getName())
-            || userModel.getGender() == null
-            || userModel.getAge() == null
-            || org.apache.commons.lang3.StringUtils.isEmpty(userModel.getTelphone())){
-                throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR);
+//        if(org.apache.commons.lang3.StringUtils.isEmpty(userModel.getName())
+//            || userModel.getGender() == null
+//            || userModel.getAge() == null
+//            || org.apache.commons.lang3.StringUtils.isEmpty(userModel.getTelphone())){
+//                throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR);
+//        }
+        ValidationResult validationResult = validator.validate(userModel);
+        if (validationResult.isHasErrors()){
+            throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, validationResult.getErrMsg());
         }
 
         //实现model转化为dataobject
