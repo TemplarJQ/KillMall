@@ -17,7 +17,7 @@ public class ItemVO {
 
     private String description;
 
-    private String sales;
+    private Integer sales;
 
     private String imgUrl;
 
@@ -61,11 +61,11 @@ public class ItemVO {
         this.description = description;
     }
 
-    public String getSales() {
+    public Integer getSales() {
         return sales;
     }
 
-    public void setSales(String sales) {
+    public void setSales(Integer sales) {
         this.sales = sales;
     }
 

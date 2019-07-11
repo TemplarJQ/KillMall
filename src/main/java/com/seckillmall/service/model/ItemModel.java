@@ -23,7 +23,7 @@ public class ItemModel {
     @NotBlank(message = "商品描述不能为空")
     private String description;
 
-    private String sales;
+    private Integer sales;
 
     @NotBlank(message = "商品图片不能为空")
     private String imgUrl;
@@ -68,11 +68,11 @@ public class ItemModel {
         this.description = description;
     }
 
-    public String getSales() {
+    public Integer getSales() {
         return sales;
     }
 
-    public void setSales(String sales) {
+    public void setSales(Integer sales) {
         this.sales = sales;
     }
 
