@@ -9,7 +9,10 @@ public enum EmBusinessError implements CommonError {
     UNKNOWN_ERROR(10002, "未知错误"),
 
     //20000开头表示为用户信息相关定义错误
-    USER_NOT_EXIST(20001, "用户不存在")
+    USER_NOT_EXIST(20001, "用户不存在"),
+    USER_LOGIN_FAIL(20002,"手机或密码不存在"),
+    USER_NOT_LOGIN(20003,"用户还未登陆")
+
     ;
 
     EmBusinessError(int errCode, String errMsg) {

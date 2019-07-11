@@ -35,6 +35,28 @@ public class UserController extends BaseController{
     @Autowired
     private HttpServletRequest httpServletRequest;
 
+    @RequestMapping(value = "/login", method = {RequestMethod.POST}, consumes = {CONTENT_TYPE_FORMED})
+    @ResponseBody
+    public CommonReturnType login(@RequestParam(name = "telphone")String telphone,
+                                  @RequestParam(name = "password")String password) throws BusinessException, UnsupportedEncodingException, NoSuchAlgorithmException {
+        //入参校验
+        if(com.alibaba.druid.util.StringUtils.isEmpty(telphone) ||
+                StringUtils.isEmpty(password)){
+            throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR);
+        }
+
+        //进行校验
+        UserModel userModel = userService.validateLogin(telphone, this.enCodeByMD5(password));
+        //将登陆凭证加入到用户登陆成功的session中
+        UserVO userVo = convertFromModel(userModel);
+        this.httpServletRequest.getSession().setAttribute("IS_LOGIN",true);
+        this.httpServletRequest.getSession().setAttribute("LOGIN_USER",userModel);
+
+        System.out.println(this.httpServletRequest.getSession().getAttribute("IS_LOGIN"));
+
+        return CommonReturnType.create(null);
+    }
+
     @Transactional
     @RequestMapping(value = "/register", method = {RequestMethod.POST}, consumes = {CONTENT_TYPE_FORMED})
     @ResponseBody

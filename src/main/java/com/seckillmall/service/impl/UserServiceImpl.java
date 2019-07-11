@@ -12,6 +12,7 @@ import com.seckillmall.service.UserService;
 import com.seckillmall.service.model.UserModel;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,10 +56,32 @@ public class UserServiceImpl implements UserService {
 
         //实现model转化为dataobject
         UserDO userDO = convertFromUserModel(userModel);
-        userDOMapper.insertSelective(userDO);
+        try{
+            userDOMapper.insertSelective(userDO);
+        }catch (DuplicateKeyException ex){
+            throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, "手机号已经重复注册");
+        }
         userModel.setId(userDO.getId());
         UserPassword userPassword = convertPasswordFromUserModel(userModel);
         userPasswordMapper.insertSelective(userPassword);
+
+    }
+
+    @Override
+    public UserModel validateLogin(String telphone, String password) throws BusinessException {
+        //查询
+        UserDO userDO = userDOMapper.selectByTelphone(telphone);
+        //判断
+        if(userDO == null){
+            throw new BusinessException(EmBusinessError.USER_LOGIN_FAIL);
+        }
+        UserPassword userPasswordDO = userPasswordMapper.selectByUserId(userDO.getId());
+        UserModel userModel = convertFromDataObject(userDO,userPasswordDO);
+        //拿到用户信息内加密的密码是否和传输的是否相匹配
+        if(!StringUtils.equals(password,userModel.getEncrptPassword())){
+            throw new BusinessException(EmBusinessError.USER_LOGIN_FAIL);
+        }
+        return userModel;
 
     }
 
