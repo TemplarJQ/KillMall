@@ -46,9 +46,10 @@
                 contentType:"application/x-www-form-urlencoded",
                 url:"http://localhost:8090/user/getotp",
                 data:{
-                    "telphone":$("#telphone").val(),
+                    "telphone":telphone,
                 },
-                // xhrFields:{withCredentials:true},
+                //与CrossOrigin配置进行对应
+                 xhrFields:{withCredentials:true},
                 success:function(data){
                     if(data.status == "success"){
                         alert("otp已经发送到了手机，请注意查收");

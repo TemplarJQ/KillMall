@@ -4,7 +4,6 @@ public class CommonReturnType {
 
     //处理结果有"success"和"fail"
 
-
     //若返回值为success则data内产生前端需要的json数据
     //若返回值为fail，则返回data内通用的错误码格式
     private String status;

@@ -51,9 +51,6 @@
 				<input class="form-control" type="text" placeholder="密码" name="password" id="password">
 			</div>
 		</div>
-
-
-
         <div class="form-actions">
             <button class="btn green" id="register" type="submit">
                 提交注册
@@ -74,30 +71,35 @@
 			var gender = $("#gender").val();
 			var age = $("#age").val();
 			var password = $("#password").val();
-            if(telphone == null || telphone == ""){
+            if(telphone == null || telphone == "") {
                 alert("手机号不能为空");
+                return false;
             }
-            if(password == null || password == ""){
-                alert("密码不能为空");
-                // return false;
-            }
-            if(age == null || age == ""){
-                alert("年龄不能为空");
-                // return false;
-            }
-            if(gender == null || gender == ""){
-                alert("性别不能为空");
-                // return false;
+            if(otpCode == null || otpCode == ""){
+                alert("验证码不能为空");
+                return false;
             }
             if(name == null || name == ""){
                 alert("姓名不能为空");
-                // return false;
+                return false;
+            }
+            if(gender == null || gender == ""){
+                alert("性别不能为空");
+                return false;
+            }
+            if(age == null || age == ""){
+                alert("年龄不能为空");
+                return false;
+            }
+            if(password == null || password == ""){
+                alert("密码不能为空");
+                return false;
             }
 
             $.ajax({
                 type:"POST",
                 contentType:"application/x-www-form-urlencoded",
-                url:"http://localhost:8080/user/register",
+                url:"http://localhost:8090/user/register",
                 data:{
 					"telphone": telphone,
 					"otpCode": otpCode,
@@ -107,19 +109,19 @@
 					"password": password
                 },
 
-                xhrFields:{
-					withCredentials:true
-				},
+                 xhrFields:{
+				 	withCredentials:true
+				 },
                 success:function(data){
                     if(data.status == "success"){
                         alert("注册成功");
-                        window.location.href("login");
+                        // window.location.href("login");
                     } else {
                         alert("注册失败，原因为" + data.data.errMsg);
                     }
                 },
                 error:function(data){
-                    alert("otp发送失败，原因为," + data.responseText);
+                    alert("注册失败，原因为," + data.responseText);
                 }
             });
             return false;

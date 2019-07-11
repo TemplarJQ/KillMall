@@ -15,13 +15,18 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
 @Controller("user")
 @RequestMapping("/user")
-@CrossOrigin
+//对跨域请求参数进行设置保证session中的信息跨域得到读取
+@CrossOrigin(allowCredentials = "true",allowedHeaders = "*")
 public class UserController extends BaseController{
 
     @Autowired
@@ -31,19 +36,18 @@ public class UserController extends BaseController{
     private HttpServletRequest httpServletRequest;
 
     @Transactional
-    @RequestMapping("/register")
+    @RequestMapping(value = "/register", method = {RequestMethod.POST}, consumes = {CONTENT_TYPE_FORMED})
     @ResponseBody
     public CommonReturnType register(@RequestParam(name="telphone")String telphone,
-                                     @RequestParam(name = "id")Integer id,
                                      @RequestParam(name = "name")String name,
                                      @RequestParam(name = "gender")Integer gender,
                                      @RequestParam(name = "age")Integer age,
                                      @RequestParam(name = "password")String password ,
-                                     @RequestParam(name = "optcode")String optCode
-                                     ) throws BusinessException {
+                                     @RequestParam(name = "otpCode")String otpCode
+                                     ) throws BusinessException, UnsupportedEncodingException, NoSuchAlgorithmException {
         //首先校验optcode
-        String inSessionCode = (String)this.httpServletRequest.getSession().getAttribute("telphone");
-        if(!com.alibaba.druid.util.StringUtils.equals(inSessionCode, optCode)){
+        String inSessionCode = (String)this.httpServletRequest.getSession().getAttribute(telphone);
+        if(!com.alibaba.druid.util.StringUtils.equals(inSessionCode, otpCode)){
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, "注册短信验证错误");
         }
 
@@ -54,11 +58,22 @@ public class UserController extends BaseController{
         userModel.setGender(new Byte(String.valueOf(gender.intValue())));
         userModel.setName(name);
         userModel.setRegisterMode("byphone");
-        userModel.setEncrptPassword(MD5Encoder.encode(password.getBytes()));
+        userModel.setEncrptPassword(this.enCodeByMD5(password));
 
         userService.register(userModel);
         return CommonReturnType.create(null);
 
+    }
+
+    public String enCodeByMD5(String str) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+        // 确定计算方法
+        MessageDigest md5 = MessageDigest.getInstance("MD5");
+        Base64.Encoder encoder = Base64.getEncoder();
+        String newStr = encoder.encodeToString(md5.digest(str.getBytes("utf-8")));
+//        BASE64Encoder base64Encoder = new BASE64Encoder();
+        // 加密字符串
+//        String newStr = base64Encoder.encode(md5.digest(str.getBytes("utf-8")));
+        return newStr;
     }
 
 
