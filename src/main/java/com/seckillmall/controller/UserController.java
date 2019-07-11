@@ -38,7 +38,7 @@ public class UserController extends BaseController{
     @Transactional
     @RequestMapping(value = "/register", method = {RequestMethod.POST}, consumes = {CONTENT_TYPE_FORMED})
     @ResponseBody
-    public CommonReturnType register(@RequestParam(name="telphone")String telphone,
+    public CommonReturnType register(@RequestParam(name= "telphone")String telphone,
                                      @RequestParam(name = "name")String name,
                                      @RequestParam(name = "gender")Integer gender,
                                      @RequestParam(name = "age")Integer age,
@@ -58,6 +58,7 @@ public class UserController extends BaseController{
         userModel.setGender(new Byte(String.valueOf(gender.intValue())));
         userModel.setName(name);
         userModel.setRegisterMode("byphone");
+        userModel.setThirdPartyId("");
         userModel.setEncrptPassword(this.enCodeByMD5(password));
 
         userService.register(userModel);

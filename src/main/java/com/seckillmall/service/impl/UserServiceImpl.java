@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
         //实现model转化为dataobject
         UserDO userDO = convertFromUserModel(userModel);
         userDOMapper.insertSelective(userDO);
-
+        userModel.setId(userDO.getId());
         UserPassword userPassword = convertPasswordFromUserModel(userModel);
         userPasswordMapper.insertSelective(userPassword);
 
@@ -68,7 +68,7 @@ public class UserServiceImpl implements UserService {
         }
         UserPassword userPassword = new UserPassword();
         userPassword.setEncrptPassword(userModel.getEncrptPassword());
-        userPassword.setId(userModel.getId());
+        userPassword.setUserId(userModel.getId());
         return userPassword;
     }
 
