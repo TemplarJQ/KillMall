@@ -11,6 +11,7 @@ import org.apache.tomcat.util.security.MD5Encoder;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +21,7 @@ import java.util.Random;
 
 @Controller("user")
 @RequestMapping("/user")
+@CrossOrigin
 public class UserController extends BaseController{
 
     @Autowired
@@ -28,7 +30,9 @@ public class UserController extends BaseController{
     @Autowired
     private HttpServletRequest httpServletRequest;
 
+    @Transactional
     @RequestMapping("/register")
+    @ResponseBody
     public CommonReturnType register(@RequestParam(name="telphone")String telphone,
                                      @RequestParam(name = "id")Integer id,
                                      @RequestParam(name = "name")String name,
@@ -47,7 +51,7 @@ public class UserController extends BaseController{
         UserModel userModel = new UserModel();
         userModel.setTelphone(telphone);
         userModel.setAge(age);
-        userModel.setGender(gender);
+        userModel.setGender(new Byte(String.valueOf(gender.intValue())));
         userModel.setName(name);
         userModel.setRegisterMode("byphone");
         userModel.setEncrptPassword(MD5Encoder.encode(password.getBytes()));
@@ -58,7 +62,7 @@ public class UserController extends BaseController{
     }
 
 
-    @RequestMapping("/getotp")
+    @RequestMapping(value = "/getotp", method = {RequestMethod.POST}, consumes = {CONTENT_TYPE_FORMED})
     @ResponseBody
     public CommonReturnType getOtp(@RequestParam(name="telphone")String telphone){
         //获取otp随机码

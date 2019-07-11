@@ -55,7 +55,7 @@
 
 
         <div class="form-actions">
-            <button class="btn blue" id="register" type="submit">
+            <button class="btn green" id="register" type="submit">
                 提交注册
             </button>
         </div>
@@ -66,7 +66,7 @@
     // 页面渲染成功才可以操作
     jQuery(document).ready(function(){
 
-        //绑定otp的click事件用于像后端发送获取手机验证码请求
+        //向后端提交注册过程
         $("#register").on("click",function(){
             var telphone = $("#telphone").val();
 			var otpCode = $("#otpCode").val();
