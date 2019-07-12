@@ -34,8 +34,8 @@ public class OrderController extends BaseController{
 
         //获取用户id
         Boolean isLogin = (Boolean)httpServletRequest.getSession().getAttribute("IS_LOGIN");
-        if(isLogin == null || isLogin.booleanValue()){
-            throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, "用户未登录");
+        if(isLogin == null || !isLogin.booleanValue()){
+            throw new BusinessException(EmBusinessError.USER_NOT_LOGIN, "用户未登录");
         }
         UserModel userModel = (UserModel)httpServletRequest.getSession().getAttribute("LOGIN_USER");
         OrderModel orderModel = orderService.createOrder(userModel.getId(), itemId, amount);

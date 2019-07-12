@@ -74,12 +74,15 @@ public class OrderServiceImpl implements OrderService {
         OrderDO orderDO = this.convertFromOrderModel(orderModel);
         orderDOMapper.insertSelective(orderDO);
 
+        //加上商品销量
+        itemService.increaseSales(itemId, amount);
+
         //返回给前端
         return orderModel;
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    //这里为什么非要改成oublic ？？
+    //这里为什么非要改成public ？？
     public String getOrderId(){
         /*
         订单号16位，前八位为时间信息，年月日（用于归档消除数据库使用），
@@ -120,6 +123,8 @@ public class OrderServiceImpl implements OrderService {
         }
         OrderDO orderDO = new OrderDO();
         BeanUtils.copyProperties(orderModel, orderDO);
+        orderDO.setItemPrice(orderModel.getItemPrice().doubleValue());
+        orderDO.setOrderPrice(orderModel.getOrderAmount().doubleValue());
         return orderDO;
     }
 }

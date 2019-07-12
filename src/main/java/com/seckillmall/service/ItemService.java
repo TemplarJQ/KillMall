@@ -16,6 +16,10 @@ public interface ItemService {
     //商品详情浏览
     ItemModel getItemById(Integer id);
 
+    //减少库存
     Boolean decreaseStock(Integer itemId, Integer amount);
+
+    //增加销量
+    void increaseSales(Integer itemId, Integer amount) throws BusinessException;
 
 }
