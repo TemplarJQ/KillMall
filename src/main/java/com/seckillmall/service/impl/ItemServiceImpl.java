@@ -100,7 +100,18 @@ public class ItemServiceImpl implements ItemService {
         return this.convertModelFromDataObject(itemDO,itemStockDO);
     }
 
-    private ItemModel convertModelFromDataObject(ItemDO itemDO,ItemStockDO itemStockDO){
+    @Override
+    @Transactional
+    public Boolean decreaseStock(Integer itemId, Integer amount) {
+        int affectedRow = itemStockDOMapper.decreaseStock(itemId, amount);
+        if(affectedRow > 0){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    private ItemModel convertModelFromDataObject(ItemDO itemDO, ItemStockDO itemStockDO){
         ItemModel itemModel = new ItemModel();
         BeanUtils.copyProperties(itemDO,itemModel);
         itemModel.setPrice(new BigDecimal(itemDO.getPrice()));

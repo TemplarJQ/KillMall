@@ -39,7 +39,7 @@ public class ItemController extends BaseController {
         itemModel.setStock(stock);
         itemModel.setImgUrl(imgUrl);
         itemModel.setDescription(description);
-//
+
         ItemModel itemModelForReturn = itemService.createItem(itemModel);
         ItemVO itemVO = this.convertVOFromModel(itemModelForReturn);
 
