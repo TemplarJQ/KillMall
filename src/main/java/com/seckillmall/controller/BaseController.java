@@ -17,20 +17,21 @@ public class BaseController {
     public static final String CONTENT_TYPE_FORMED = "application/x-www-form-urlencoded";
 
     //定义ExceptionHandler解决未被controller层吸收的exception
-    @ExceptionHandler(Exception.class)
-    @ResponseStatus(HttpStatus.OK)//屏蔽tomcat自己的处理
-    @ResponseBody
-    public Object handlerException(HttpServletRequest request, Exception ex) {
-        Map<String, Object> responseData = new HashMap<>();
-        if(ex instanceof BusinessException) {
-            BusinessException exception = (BusinessException) ex;
-            responseData.put("errCode", exception.getErrCode());
-            responseData.put("errMsg", exception.getErrMsg());
-        }else {
-            responseData.put("errCode", EmBusinessError.UNKNOWN_ERROR.getErrCode());
-            responseData.put("errMSg", EmBusinessError.UNKNOWN_ERROR.getErrMsg());
-
-        }
-        return CommonReturnType.create(responseData, "fail");
-    }
+//    @ExceptionHandler(Exception.class)
+//    @ResponseStatus(HttpStatus.OK)//屏蔽tomcat自己的处理
+//    @ResponseBody
+//    public Object handlerException(HttpServletRequest request, Exception ex) {
+//        Map<String, Object> responseData = new HashMap<>();
+//        if(ex instanceof BusinessException) {
+//            BusinessException exception = (BusinessException) ex;
+//            responseData.put("errCode", exception.getErrCode());
+//            responseData.put("errMsg", exception.getErrMsg());
+//        }else {
+//            responseData.put("errCode", EmBusinessError.UNKNOWN_ERROR.getErrCode());
+//            responseData.put("errMSg", EmBusinessError.UNKNOWN_ERROR.getErrMsg());
+//
+//        }
+//        return CommonReturnType.create(responseData, "fail");
+//    }
+    //解决全局问题
 }
