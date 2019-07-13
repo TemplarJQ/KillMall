@@ -25,6 +25,9 @@
 所参考的整体架构设计样式为：
 ![架构](https://raw.githubusercontent.com/TemplarJQ/Resources4Readme/master/pic/20190713/mainDesignForKillMall.jpg)
 
+项目设计简易UML图
+![UML图](https://raw.githubusercontent.com/TemplarJQ/Resources4Readme/master/pic/20190713/design.jpg)
+
 
 ## 开发笔记
 
