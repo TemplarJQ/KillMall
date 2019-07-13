@@ -105,7 +105,7 @@
 				data: {
 					"itemId": g_itemVO.id,
 					"promoId": g_itemVO.promoId,
-					"amount": 1,
+					"amount": 1
 				},
 				xhrFields:{
 					withCredentials:true
@@ -148,7 +148,6 @@
 				g_itemVO.promoStatus = 2;
 				reloadDom();
 			}
-
 			$("#promoStartDate").text("秒杀活动将于："+g_itemVO.startDate+" 开始售卖 倒计时："+delta+"  秒");
 			$("#promoPrice").text(g_itemVO.promoPrice);
 			$("#createOrder").attr("disabled", true);

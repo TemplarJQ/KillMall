@@ -7,7 +7,9 @@ import com.seckillmall.dataobject.ItemStockDO;
 import com.seckillmall.error.BusinessException;
 import com.seckillmall.error.EmBusinessError;
 import com.seckillmall.service.ItemService;
+import com.seckillmall.service.PromoService;
 import com.seckillmall.service.model.ItemModel;
+import com.seckillmall.service.model.PromoModel;
 import com.seckillmall.validator.ValidationResult;
 import com.seckillmall.validator.ValidatorImpl;
 import org.springframework.beans.BeanUtils;
@@ -30,6 +32,9 @@ public class ItemServiceImpl implements ItemService {
 
     @Autowired
     private ItemStockDOMapper itemStockDOMapper;
+
+    @Autowired
+    private PromoService promoService;
 
     private ItemDO convertFromItemModel(ItemModel itemModel){
         if(itemModel == null){
@@ -97,7 +102,15 @@ public class ItemServiceImpl implements ItemService {
         ItemStockDO itemStockDO = itemStockDOMapper.selectByItemId( itemDO.getId());
 
         //将dataobject转换成model
-        return this.convertModelFromDataObject(itemDO,itemStockDO);
+        ItemModel itemModel =  this.convertModelFromDataObject(itemDO,itemStockDO);
+
+        //获取商品秒杀活动信息
+        PromoModel promoModel = promoService.getPromoModelById(itemModel.getId());
+        if(promoModel != null && promoModel.getStatus().intValue() != 3){
+            itemModel.setPromoModel(promoModel);
+        }
+
+        return itemModel;
     }
 
     @Override

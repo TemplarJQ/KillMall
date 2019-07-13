@@ -5,6 +5,7 @@ import com.seckillmall.error.BusinessException;
 import com.seckillmall.response.CommonReturnType;
 import com.seckillmall.service.ItemService;
 import com.seckillmall.service.model.ItemModel;
+import org.joda.time.format.DateTimeFormat;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -52,7 +53,6 @@ public class ItemController extends BaseController {
     public CommonReturnType getItem(@RequestParam(name = "id")Integer id){
         ItemModel itemModel = itemService.getItemById(id);
         ItemVO itemVo = this.convertVOFromModel(itemModel);
-
         return CommonReturnType.create(itemVo);
     }
 
@@ -62,6 +62,16 @@ public class ItemController extends BaseController {
         }
         ItemVO itemVo = new ItemVO();
         BeanUtils.copyProperties(itemModel,itemVo);
+        if(itemModel.getPromoModel() != null){
+            //有秒杀活动
+            itemVo.setPromoStatus(itemModel.getPromoModel().getStatus());
+            itemVo.setStartDate(itemModel.getPromoModel().getStartDate().toString(
+                    DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")));
+            itemVo.setPromoId(itemModel.getPromoModel().getId());
+            itemVo.setPromoPrice(itemModel.getPromoModel().getPromoItemPrice());
+        }else {
+            itemVo.setPromoStatus(0);
+        }
 
         return itemVo;
     }
