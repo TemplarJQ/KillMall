@@ -13,11 +13,15 @@
 项目目录结构如下：
 ![秒杀商城](https://raw.githubusercontent.com/TemplarJQ/Resources4Readme/master/pic/20190713/projectStruct.jpg)
 
+采用的设计模式为领域分离模式
+![领域设计模式](https://raw.githubusercontent.com/TemplarJQ/Resources4Readme/master/pic/20190713/Model.jpg)
+
 
 ## 项目整体参考流程
 
 所参考的整体架构设计样式为：
 ![架构](https://raw.githubusercontent.com/TemplarJQ/Resources4Readme/master/pic/20190713/mainDesignForKillMall.jpg)
+
 
 ## 开发笔记
 
@@ -67,6 +71,5 @@
 - Intellij IDEA 2017.3
 - 阿里云ESC 操作系统 16.04.6 LTS
 - Mysql 5.7.25 数据库
-- Redis 4.0.1缓存
+- Redis 4.0.1 缓存
 - 消息队列 RocketMQ 4.5
-- phantomJs无头浏览器
