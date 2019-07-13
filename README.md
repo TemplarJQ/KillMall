@@ -10,10 +10,13 @@
 ## 项目结构
 
 现有逻辑实现参考的是常见的秒杀平台业务逻辑，主要运用SpringBoot+Mybatis的方式进行开发。
-项目目录结构如下：
+- 项目目录结构如下：
+
 ![秒杀商城](https://raw.githubusercontent.com/TemplarJQ/Resources4Readme/master/pic/20190713/projectStruct.jpg)
 
-采用的设计模式为领域分离模式
+
+- 采用的设计模式为领域分离模式
+
 ![领域设计模式](https://raw.githubusercontent.com/TemplarJQ/Resources4Readme/master/pic/20190713/Model.jpg)
 
 
