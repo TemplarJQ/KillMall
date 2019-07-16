@@ -79,3 +79,8 @@
 - Mysql 5.7.25 数据库
 - Redis 4.0.1 缓存
 - 消息队列 RocketMQ 4.5
+
+### 逐步改进
+
+- 加入项目云端测试：[云端部署](https://github.com/TemplarJQ/KillMall/issues/4#issue-467684642)
+- 加入Jmester性能测试：[性能测试](https://github.com/TemplarJQ/KillMall/issues/5#issue-467693466)
