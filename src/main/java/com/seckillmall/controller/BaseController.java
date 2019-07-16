@@ -34,4 +34,7 @@ public class BaseController {
 //        return CommonReturnType.create(responseData, "fail");
 //    }
     //解决全局问题
+
+
+    //为解决全局问题，将该部分内容也加入到了全局异常处理的范畴里
 }
