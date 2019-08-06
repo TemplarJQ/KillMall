@@ -67,6 +67,7 @@ public class UserController extends BaseController{
                                      @RequestParam(name = "password")String password ,
                                      @RequestParam(name = "otpCode")String otpCode
                                      ) throws BusinessException, UnsupportedEncodingException, NoSuchAlgorithmException {
+
         //首先校验optcode
         String inSessionCode = (String)this.httpServletRequest.getSession().getAttribute(telphone);
         if(!com.alibaba.druid.util.StringUtils.equals(inSessionCode, otpCode)){

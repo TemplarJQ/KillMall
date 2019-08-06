@@ -24,7 +24,6 @@ public class ItemController extends BaseController {
     @Autowired
     ItemService itemService;
 
-
     //创建商品
     @RequestMapping(value = "/create", method = {RequestMethod.POST}, consumes = {CONTENT_TYPE_FORMED})
     @ResponseBody
@@ -43,7 +42,6 @@ public class ItemController extends BaseController {
 
         ItemModel itemModelForReturn = itemService.createItem(itemModel);
         ItemVO itemVO = this.convertVOFromModel(itemModelForReturn);
-
         return CommonReturnType.create(itemVO);
     }
 

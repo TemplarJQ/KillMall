@@ -3,6 +3,7 @@ package com.seckillmall.service;
 import com.seckillmall.error.BusinessException;
 import com.seckillmall.service.model.ItemModel;
 
+import java.util.HashMap;
 import java.util.List;
 
 public interface ItemService {
