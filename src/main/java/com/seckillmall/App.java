@@ -17,13 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 @SpringBootApplication(scanBasePackages = {"com.seckillmall"})
 @RestController
 @MapperScan("com.seckillmall.dao")
-public class App 
+public class App
 {
     @Autowired
     private UserDOMapper userDOMapper;
 
     @RequestMapping("/")
-    public String home(){
+    public String home() {
         UserDO userDO = userDOMapper.selectByPrimaryKey(1);
         if(userDO == null){
             return "用户不存在";
