@@ -1,9 +1,10 @@
 package com.seckillmall.service.model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 //解决用户下单的交易模型
-public class OrderModel {
+public class OrderModel implements Serializable{
 
     //企业级别应用的交易号是要记录时间的明显格式，如20190701+88888
     private String id;
