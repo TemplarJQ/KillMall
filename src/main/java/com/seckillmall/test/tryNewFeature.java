@@ -5,14 +5,27 @@ import java.util.Arrays;
 public class tryNewFeature {
 
     public static void main(String[] args) {
+        System.out.println(getVal(13));
+    }
 
+    public static int getVal(int cap) {
+        int n = cap - 1;
+        int temp = n >>> 1;
+        n  = temp | n;
+        n |= n >>> 2;
+        n |= n >>> 4;
+        n |= n >>> 8;
+        n |= n >>> 16;
+        return n + 1;
+    }
+
+    public static void fun4() {
         int[] a = {1,2,3,4,5};
         for(int x: a){
             System.out.println(x);
             x = x + 1;
         }
         System.out.println(Arrays.toString(a));
-
     }
 
     public static void fun3() {

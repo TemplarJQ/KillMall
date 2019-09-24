@@ -48,7 +48,7 @@ public class ItemController extends BaseController {
     //展示单件商品
     @RequestMapping(value = "/get", method = {RequestMethod.GET})
     @ResponseBody
-    public CommonReturnType getItem(@RequestParam(name = "id")Integer id){
+    public CommonReturnType getItem(@RequestParam(name = "id")Integer id) {
         ItemModel itemModel = itemService.getItemById(id);
         ItemVO itemVo = this.convertVOFromModel(itemModel);
         return CommonReturnType.create(itemVo);
