@@ -10,6 +10,7 @@ import com.seckillmall.service.model.UserModel;
 import org.apache.tomcat.util.security.MD5Encoder;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -18,10 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @Controller("user")
 @RequestMapping("/user")
@@ -34,6 +33,9 @@ public class UserController extends BaseController{
 
     @Autowired
     private HttpServletRequest httpServletRequest;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @RequestMapping(value = "/login", method = {RequestMethod.POST}, consumes = {CONTENT_TYPE_FORMED})
     @ResponseBody
@@ -52,9 +54,21 @@ public class UserController extends BaseController{
         this.httpServletRequest.getSession().setAttribute("IS_LOGIN",true);
         this.httpServletRequest.getSession().setAttribute("LOGIN_USER",userModel);
 
+        //修改成登录成功后将对应的登录信息和登录凭证一起存入redis
+
+        //生成登录凭证,UUID
+        String uuidToken = UUID.randomUUID().toString();
+        uuidToken = uuidToken.replace("-", "");
+        //建立redis与uuid之间的联系，需要一个uuid的操作类
+        redisTemplate.opsForValue().set(uuidToken, userModel);
+        //超时时间
+        redisTemplate.expire(uuidToken, 1, TimeUnit.HOURS);
+
+
         System.out.println(this.httpServletRequest.getSession().getAttribute("IS_LOGIN"));
 
-        return CommonReturnType.create(null);
+        //下发token
+        return CommonReturnType.create(uuidToken);
     }
 
     @Transactional
