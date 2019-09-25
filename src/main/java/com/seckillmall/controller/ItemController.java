@@ -3,6 +3,7 @@ package com.seckillmall.controller;
 import com.seckillmall.controller.viewobject.ItemVO;
 import com.seckillmall.error.BusinessException;
 import com.seckillmall.response.CommonReturnType;
+import com.seckillmall.service.CacheService;
 import com.seckillmall.service.ItemService;
 import com.seckillmall.service.model.ItemModel;
 import org.joda.time.format.DateTimeFormat;
@@ -24,10 +25,13 @@ import java.util.stream.Collectors;
 public class ItemController extends BaseController {
 
     @Autowired
-    ItemService itemService;
+    private ItemService itemService;
 
     @Autowired
-    RedisTemplate redisTemplate;
+    private RedisTemplate redisTemplate;
+
+    @Autowired
+    private CacheService cacheService;
 
     //创建商品
     @RequestMapping(value = "/create", method = {RequestMethod.POST}, consumes = {CONTENT_TYPE_FORMED})
@@ -55,14 +59,25 @@ public class ItemController extends BaseController {
     @ResponseBody
     public CommonReturnType getItem(@RequestParam(name = "id")Integer id) {
 
-        //根据商品id到redis查询缓存
-        ItemModel itemModel = (ItemModel) redisTemplate.opsForValue().get("item_"+id);
-        //不存在则读service
+        //多级缓存：取本地，不存在，取redis，再没有取数据库
+        ItemModel itemModel = null;
+
+        //取本地
+        itemModel = (ItemModel) cacheService.getFromCommonCache("item_"+id);
+
+        //本地不存在则到redis
         if(itemModel == null) {
-            itemModel = itemService.getItemById(id);
-            //设置进去
-            redisTemplate.opsForValue().set("item_"+id, itemModel);
-            redisTemplate.expire("item_"+id, 10, TimeUnit.MINUTES);
+            //根据商品id到redis查询缓存
+            itemModel = (ItemModel) redisTemplate.opsForValue().get("item_"+id);
+            //不存在则读service，使用redis做缓存
+            if(itemModel == null) {
+                itemModel = itemService.getItemById(id);
+                //设置进去
+                redisTemplate.opsForValue().set("item_"+id, itemModel);
+                redisTemplate.expire("item_"+id, 10, TimeUnit.MINUTES);
+            }
+            //更新本地缓存
+            cacheService.serCommonCache("item_"+id, itemModel);
         }
 
         ItemVO itemVo = this.convertVOFromModel(itemModel);
