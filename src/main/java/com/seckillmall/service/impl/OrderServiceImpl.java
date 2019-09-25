@@ -47,7 +47,8 @@ public class OrderServiceImpl implements OrderService {
         if(userModel == null){
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, "用户信息不存在");
         }
-        ItemModel itemModel = itemService.getItemById(itemId);
+        //商品是否存在的校验，并引入redis
+        ItemModel itemModel = itemService.getItemByIdInCache(itemId);
         if(itemModel == null){
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, "商品信息不存在");
         }
