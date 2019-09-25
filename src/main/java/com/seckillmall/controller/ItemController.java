@@ -5,6 +5,7 @@ import com.seckillmall.error.BusinessException;
 import com.seckillmall.response.CommonReturnType;
 import com.seckillmall.service.CacheService;
 import com.seckillmall.service.ItemService;
+import com.seckillmall.service.PromoService;
 import com.seckillmall.service.model.ItemModel;
 import org.joda.time.format.DateTimeFormat;
 import org.springframework.beans.BeanUtils;
@@ -32,6 +33,9 @@ public class ItemController extends BaseController {
 
     @Autowired
     private CacheService cacheService;
+
+    @Autowired
+    private PromoService promoService;
 
     //创建商品
     @RequestMapping(value = "/create", method = {RequestMethod.POST}, consumes = {CONTENT_TYPE_FORMED})
@@ -115,5 +119,12 @@ public class ItemController extends BaseController {
             return itemVo;
         }).collect(Collectors.toList());
         return CommonReturnType.create(itemVoList);
+    }
+
+    @RequestMapping(value = "/publishpromo", method = {RequestMethod.GET})
+    @ResponseBody
+    public CommonReturnType publishpromo(@RequestParam(name = "id")Integer promoId) {
+        promoService.publishPromo(promoId);
+        return CommonReturnType.create(null);
     }
 }
