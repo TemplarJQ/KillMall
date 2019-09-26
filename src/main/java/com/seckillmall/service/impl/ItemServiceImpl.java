@@ -6,12 +6,14 @@ import com.seckillmall.dataobject.ItemDO;
 import com.seckillmall.dataobject.ItemStockDO;
 import com.seckillmall.error.BusinessException;
 import com.seckillmall.error.EmBusinessError;
+import com.seckillmall.msgqueue.MqProducer;
 import com.seckillmall.service.ItemService;
 import com.seckillmall.service.PromoService;
 import com.seckillmall.service.model.ItemModel;
 import com.seckillmall.service.model.PromoModel;
 import com.seckillmall.validator.ValidationResult;
 import com.seckillmall.validator.ValidatorImpl;
+import org.apache.rocketmq.client.producer.SendResult;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -40,6 +42,10 @@ public class ItemServiceImpl implements ItemService {
 
     @Autowired
     private RedisTemplate redisTemplate;
+
+    //自己实现的mq方法
+    @Autowired
+    private MqProducer mqProducer;
 
     private ItemDO convertFromItemModel(ItemModel itemModel){
         if(itemModel == null){
@@ -141,8 +147,14 @@ public class ItemServiceImpl implements ItemService {
 //            return false;
 //        }
         if(result >= 0){
+            boolean mqResult = mqProducer.asyncReduceStock(itemId, amount);
+            if(!mqResult) {
+                redisTemplate.opsForValue().increment("promo_item_stock_"+itemId,amount.intValue());
+                return false;
+            }
             return true;
         } else {
+            redisTemplate.opsForValue().increment("promo_item_stock_"+itemId,amount.intValue());
             return false;
         }
     }

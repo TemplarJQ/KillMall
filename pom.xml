@@ -82,6 +82,13 @@
       <version>1.18.0</version>
     </dependency>
 
+      <!-- rocketMQ -->
+      <dependency>
+          <groupId>org.apache.rocketmq</groupId>
+          <artifactId>rocketmq-client</artifactId>
+          <version>4.3.0</version>
+      </dependency>
+
     <!-- guava -->
     <dependency>
       <groupId>com.google.guava</groupId>
@@ -112,6 +119,7 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-aop</artifactId>
     </dependency>
+
 
   </dependencies>
 
