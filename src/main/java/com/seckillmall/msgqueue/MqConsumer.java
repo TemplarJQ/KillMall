@@ -52,5 +52,7 @@ public class MqConsumer {
                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             }
         });
+
+        consumer.start();
     }
 }
