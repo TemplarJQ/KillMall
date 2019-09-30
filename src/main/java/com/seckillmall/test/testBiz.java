@@ -1,13 +1,10 @@
 package com.seckillmall.test;
 
-import com.alibaba.druid.util.StringUtils;
 import com.google.common.collect.Lists;
-import com.seckillmall.aop.BaseCheckConfig;
 import com.seckillmall.utils.DateTimeUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
