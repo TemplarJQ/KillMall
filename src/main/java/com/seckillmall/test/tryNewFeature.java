@@ -5,8 +5,12 @@ import java.util.Arrays;
 public class tryNewFeature {
 
     public static void main(String[] args) {
-        System.out.println(getVal(13));
+
+        int[] res = new int[10];
+//        System.out.println(getVal(13));
     }
+
+
 
     public static int getVal(int cap) {
         int n = cap - 1;
